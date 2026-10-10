@@ -19,7 +19,7 @@ except ImportError:
     Document = None
 
 # -------------------------------------------------------------------
-# Configuração e Estilo Visual Profissional (CSS Customizado)
+# Configuração e Design Gráfico Executivo (CSS Avançado)
 # -------------------------------------------------------------------
 PASTA_PROJETO = Path(__file__).resolve().parent
 ARQUIVO_ENV = PASTA_PROJETO / ".env"
@@ -31,34 +31,71 @@ st.set_page_config(
     layout="wide",
 )
 
+# Injeção de CSS personalizado para UI/UX profissional (SaaS / Enterprise)
 st.markdown("""
     <style>
-    .main { background-color: #f8fafc; }
-    .stSidebar { background-color: #f1f5f9; border-right: 1px solid #e2e8f0; }
-    h1, h2, h3 { color: #0f172a; font-family: 'Segoe UI', sans-serif; }
-    .stButton>button { border-radius: 8px; font-weight: 600; }
+    .main {
+        background-color: #f8fafc;
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    }
+    .stSidebar {
+        background-color: #f1f5f9;
+        border-right: 1px solid #e2e8f0;
+    }
+    h1, h2, h3 {
+        color: #0f172a;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+    .stButton>button {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s ease-in-out;
+        border: 1px solid #cbd5e1;
+        background-color: #ffffff;
+        color: #0f172a;
+    }
+    .stButton>button:hover {
+        border-color: #0284c7;
+        color: #0284c7;
+        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+    }
+    .stFormSubmitButton>button {
+        background-color: #0f172a;
+        color: #ffffff;
+        border: none;
+    }
+    .stFormSubmitButton>button:hover {
+        background-color: #1e293b;
+        color: #ffffff;
+    }
+    div.stAlert {
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+    }
     </style>
 """, unsafe_allow_html=True)
 
 MODOS = [
-    "Orientação profissional",
-    "Análise de competências",
-    "Plano de carreira",
-    "Currículo profissional (Análise & Otimização)",
-    "Análise de vaga & Portais de Emprego",
-    "Simulação de entrevista",
+    "🧭 Orientação profissional",
+    "📊 Análise de competências",
+    "📈 Plano de carreira",
+    "📄 Currículo profissional (Análise & Otimização)",
+    "🔗 Análise de vaga & Portais de Emprego",
+    "💬 Simulação de entrevista",
     "🎙️ Simulação de Entrevista por Voz",
+    "😈 Advogado do Diabo (Desafiador Incisivo)",
     "📝 Teste Prático de Conhecimento",
     "⚖️ Módulo de Pressão Comportamental",
     "👑 Módulo de Liderança Executiva",
-    "Comportamento e Postura Profissional",
+    "🧠 Comportamento e Postura Profissional",
     "📊 Gerar Apresentação de Slides (Projeto)",
 ]
 
 SYSTEM_PROMPT = (
     "Você é o OrientAção IA, um assistente executivo de orientação profissional, desenvolvimento "
     "de carreira, empregabilidade e mentoria comportamental no Brasil. "
-    "Responda em português brasileiro, com tom acolhedor, altamente profissional, prático e respeitoso.\n\n"
+    "Responda em português brasileiro, com tom altamente profissional, prático e respeitoso.\n\n"
     "REGRAS DE CONFIABILIDADE E MENTORIA:\n"
     "- Use apenas os dados que a pessoa forneceu como fatos sobre ela.\n"
     "- Diferencie claramente 'informado pela pessoa', 'possibilidade a confirmar'.\n"
@@ -122,13 +159,19 @@ def parece_analise_de_curriculo(mensagem: str) -> bool:
 # -------------------------------------------------------------------
 # Interface Principal
 # -------------------------------------------------------------------
-st.title("🧭 OrientAção IA")
-st.markdown("##### Plataforma Executiva de Carreira, Inteligência Comportamental e Empregabilidade")
-st.write("---")
+col_logo, col_title = st.columns([1, 8])
+with col_logo:
+    st.markdown("# 🧭")
+with col_title:
+    st.title("OrientAção IA")
+    st.markdown("##### *Plataforma Executiva de Carreira, Inteligência Comportamental e Empregabilidade*")
+
+st.markdown("---")
 
 with st.sidebar:
-    st.header("👤 Perfil Profissional")
-    st.write("Preencha seus dados para personalizar todas as análises e mentorias da IA.")
+    st.markdown("### 👤 Perfil Profissional")
+    st.markdown("<small style='color: #64748b;'>Configure seus dados para personalizar as análises e mentorias da IA.</small>", unsafe_allow_html=True)
+    
     with st.form("form_perfil"):
         experiencia = st.text_area("Experiência Principal", placeholder="Ex: manutenção, atendimento, suporte...", height=90)
         formacao = st.text_area("Formação & Certificações", placeholder="Ex: técnico, superior, cursos...", height=75)
@@ -152,10 +195,11 @@ with st.sidebar:
     st.divider()
     modo = st.selectbox("🎯 Selecione a Ferramenta / Módulo", MODOS, index=0)
     
+    st.markdown("<br>", unsafe_allow_html=True)
     if st.button("🗑️ Limpar Sessão / Conversa", use_container_width=True):
         st.session_state.mensagens_gemini = []
         st.session_state.mensagens_exibicao = []
-        for k in ["quiz_perguntas", "pressao_iniciada", "lideranca_iniciada", "curriculo_otimizado"]:
+        for k in ["quiz_perguntas", "pressao_iniciada", "lideranca_iniciada", "curriculo_otimizado", "diabo_iniciado"]:
             if k in st.session_state:
                 del st.session_state[k]
         st.rerun()
@@ -221,7 +265,7 @@ if modo == "📊 Gerar Apresentação de Slides (Projeto)":
 # -------------------------------------------------------------------
 # MODO: CURRÍCULO PROFISSIONAL
 # -------------------------------------------------------------------
-elif modo == "Currículo profissional (Análise & Otimização)":
+elif modo == "📄 Currículo profissional (Análise & Otimização)":
     st.subheader("📄 Módulo de Currículo Profissional: Análise e Otimização Avançada")
     st.markdown("Envie seu currículo ou cole o texto abaixo. A IA fará uma análise crítica de impacto, reescreverá o conteúdo deixando-o pronto e estruturado para você baixar e utilizar nos processos seletivos.")
 
@@ -280,7 +324,7 @@ elif modo == "Currículo profissional (Análise & Otimização)":
 # -------------------------------------------------------------------
 # MODO: ANÁLISE DE VAGA & PORTAIS DE EMPREGO
 # -------------------------------------------------------------------
-elif modo == "Análise de vaga & Portais de Emprego":
+elif modo == "🔗 Análise de vaga & Portais de Emprego":
     st.subheader("🔗 Análise de Vaga e Conexão com Portais de Emprego no Brasil")
     st.markdown("Cole a descrição da vaga que você deseja concorrer. A IA fará um cruzamento com o seu perfil cadastrado para apontar aderência, gaps e estratégias de entrevista.")
 
@@ -323,6 +367,67 @@ elif modo == "Análise de vaga & Portais de Emprego":
                         st.markdown(limpar_resposta(resp.text))
                     except Exception as e:
                         st.error(f"Erro na análise: {e}")
+
+# -------------------------------------------------------------------
+# MODO: ADVOGADO DO DIABO (DESAFIADOR INCISIVO)
+# -------------------------------------------------------------------
+elif modo == "😈 Advogado do Diabo (Desafiador Incisivo)":
+    st.subheader("😈 Módulo: Advogado do Diabo (Desafiador Incisivo)")
+    st.markdown("Neste modo, a IA assume uma postura **implacável, crítica e questionadora**. O objetivo é achar falhas na sua argumentação, testar suas convicções profissionais e expor pontos cegos pessoais para treinar sua resiliência e preparo sob fogo cruzado.")
+    
+    st.info("🎙️ **Dica de Áudio:** Utilize o microfone do seu teclado (Windows + H no Windows, ou ditado por voz no seu dispositivo) na caixa de chat abaixo para responder falando por áudio!")
+
+    if not st.session_state.get("diabo_iniciado"):
+        if st.button("🔥 Iniciar Confronto com o Advogado do Diabo", use_container_width=True):
+            api_key = os.getenv("GEMINI_API_KEY", "").strip()
+            if not api_key:
+                st.error("⚠️ Chave `GEMINI_API_KEY` não encontrada.")
+            else:
+                with st.spinner("Preparando artilharia crítica e analisando seu perfil..."):
+                    genai.configure(api_key=api_key)
+                    model = genai.GenerativeModel('gemini-3.1-flash-lite')
+                    
+                    prompt_diabo_init = (
+                        "Inicie uma sessão implacável como 'Advogado do Diabo'. "
+                        "Analise o perfil do usuário abaixo e faça o primeiro questionamento duro, incisivo e direto, "
+                        "desafiando uma suposição, objetivo ou fraqueza aparente nas competências ou histórico dele:\n\n"
+                        f"PERFIL DO USUÁRIO:\n{perfil_formatado}"
+                    )
+                    resp = model.generate_content(prompt_diabo_init)
+                    st.session_state.diabo_chat = [{"role": "assistant", "content": limpar_resposta(resp.text)}]
+                    st.session_state.diabo_iniciado = True
+                    st.rerun()
+
+    if st.session_state.get("diabo_iniciado"):
+        for m in st.session_state.diabo_chat:
+            with st.chat_message(m["role"]):
+                st.markdown(m["content"])
+
+        resposta_diabo = st.chat_input("Responda ao desafio (digite ou use o ditado por voz)...")
+        if resposta_diabo:
+            st.session_state.diabo_chat.append({"role": "user", "content": resposta_diabo})
+            with st.chat_message("user"):
+                st.markdown(resposta_diabo)
+
+            with st.chat_message("assistant"):
+                with st.spinner("Analisando falhas e contra-atacando..."):
+                    try:
+                        genai.configure(api_key=os.getenv("GEMINI_API_KEY").strip())
+                        model = genai.GenerativeModel('gemini-3.1-flash-lite')
+                        hist_diabo = "\n".join([f"{msg['role']}: {msg['content']}" for msg in st.session_state.diabo_chat])
+                        
+                        prompt_ataque = (
+                            "Você é o Advogado do Diabo. O usuário acabou de responder ao seu questionamento anterior. "
+                            "Aponte falhas lógicas, contradições, ingenuidades ou pontos cegos pessoais na resposta dele de forma firme e crítica. "
+                            "Faça uma nova provocação ainda mais incisiva para testar os limites dele:\n\n"
+                            f"{hist_diabo}"
+                        )
+                        r = model.generate_content(prompt_ataque)
+                        texto_resp = limpar_resposta(r.text)
+                        st.markdown(texto_resp)
+                        st.session_state.diabo_chat.append({"role": "assistant", "content": texto_resp})
+                    except Exception as e:
+                        st.error(f"Erro: {e}")
 
 # -------------------------------------------------------------------
 # MODO: TESTE PRÁTICO DE CONHECIMENTO
@@ -517,8 +622,8 @@ else:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-    if modo == "🎙️ Simulação de Entrevista por Voz":
-        st.info("💡 **Dica de Voz:** Utilize o microfone embutido do seu teclado (Windows + H no Windows, ou ditado por voz no celular/PC) na caixa de texto abaixo para conversar falando com a IA!")
+    if modo in ["🎙️ Simulação de Entrevista por Voz", "😈 Advogado do Diabo (Desafiador Incisivo)"]:
+        st.info("💡 **Dica de Voz:** Utilize o microfone embutido do seu teclado (Windows + H no Windows, ou ditado por voz no celular/PC) na caixa de texto abaixo para conversar falando por áudio!")
 
     mensagem_usuario = st.chat_input("Escreva sua resposta, pergunta ou simulação...")
 
@@ -536,14 +641,16 @@ else:
         else:
             contexto = f"MODO ATUAL: {modo}\n\nPERFIL DO USUÁRIO:\n{perfil_formatado}\n"
             
+            modo_chave = modo.split(" ", 1)[1] if " " in modo else modo
+            
             instrucoes_modo = {
                 "Orientação profissional": "Ajude a pessoa a definir próximos passos práticos de carreira com base nos dados informados.",
                 "Análise de competências": "Separe claramente as competências informadas em Hard Skills (técnicas) e Soft Skills (comportamentais), identificando o que precisa ser validado.",
                 "Plano de carreira": "Crie um plano prático, estruturado em etapas claras com prazos de curto, médio e longo prazo.",
                 "Simulação de entrevista": "Faça uma pergunta por vez de entrevista e dê feedback imediato sobre a resposta.",
-                "🎙️ Simulação de Entrevista por Voz": "Atue como um recrutador exigente em uma entrevista oral. Faça perguntas focadas em comportamento e competência, uma por vez.",
+                "Simulação de Entrevista por Voz": "Atue como um recrutador exigente em uma entrevista oral. Faça perguntas focadas em comportamento e competência, uma por vez.",
                 "Comportamento e Postura Profissional": "Avalie sob a ótica da inteligência emocional. Aponte atitudes ruins que sabotam o ambiente e ensine a agir de forma madura."
-            }[modo]
+            }.get(modo_chave, "Ajude o usuário em sua trajetória profissional com base no perfil fornecido.")
 
             prompt_completo = f"{SYSTEM_PROMPT}\n\n{contexto}\n\nINSTRUÇÕES DO MÓDULO:\n{instrucoes_modo}\n\nInteração do usuário: {mensagem_usuario}"
 
